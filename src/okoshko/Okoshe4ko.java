@@ -1,9 +1,12 @@
 package okoshko;
+import com.sun.prism.*;
 import javafx.scene.paint.RadialGradient;
 import javafx.scene.shape.Circle;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Graphics;
 import java.awt.event.*;
 import java.awt.geom.*;
 import java.util.Random;
@@ -45,10 +48,6 @@ public class Okoshe4ko extends JFrame{
 class PicPanel extends JPanel implements ActionListener{
 
     private Line2D Liniya ;
-    private int Dx = 0;
-    private int Dy = 0;
-    private int Dw = 0;
-    private int Dh = 0;
     private double theta = 0;
 
     public PicPanel(){
@@ -56,18 +55,20 @@ class PicPanel extends JPanel implements ActionListener{
 
     }
 
+
     public void paintComponent(Graphics g)   {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D)g;
-            int x = getWidth()/4 + Dx;
-            int y = getHeight()/4 + Dy;
-            int w = getWidth()/4*3 + Dw;
-            int h = getHeight()/4*3 + Dh;
-        Liniya.setLine(x,y,w,h);
+        int x1 = (int)(getWidth()/4 + Liniya.getX1());
+        int y1 = (int)(getHeight()/4 + Liniya.getY1());
+        int x2 = (int)(getWidth()/4*3 + Liniya.getX2());
+        int y2 = (int)(getHeight()/4*3 + Liniya.getY2());
+
         g2d.setColor(Color.BLACK);
-        g2d.rotate(theta,(Liniya.getX1()+Liniya.getX2())/2,(Liniya.getY1()+Liniya.getY2())/2);
+        g2d.rotate(theta,(x1+x2)/2,(y1+y2)/2);
         g2d.setStroke(new BasicStroke(2));
-        g2d.draw(Liniya);
+        g2d.drawLine(x1,y1,x2,y2);
+
 
 //        Circle cent =
 //                new Circle((int)(Liniya.getX1()+Liniya.getX2())/2,(int)(Liniya.getY1()+Liniya.getY2())/2,1);
@@ -79,23 +80,20 @@ class PicPanel extends JPanel implements ActionListener{
     public void actionPerformed (ActionEvent event){
         switch (event.getActionCommand()){
             case "rght":
-                Dx +=10;
-                Dw += 10;
+                Liniya.setLine(Liniya.getX1()+10,Liniya.getY1(),Liniya.getX2()+10,Liniya.getY2());
                 break;
             case "left":
-                Dx -=10;
-                Dw -= 10;
+                Liniya.setLine(Liniya.getX1()-10,Liniya.getY1(),Liniya.getX2()-10,Liniya.getY2());
                 break;
             case "doun":
-                Dy +=10;
-                Dh += 10;
+                Liniya.setLine(Liniya.getX1(),Liniya.getY1()+10,Liniya.getX2(),Liniya.getY2()+10);
                 break;
             case "up":
-                Dy -=10;
-                Dh -= 10;
+                Liniya.setLine(Liniya.getX1(),Liniya.getY1()-10,Liniya.getX2(),Liniya.getY2()-10);
                 break;
             case "rot":
-                 theta += 0.08;
+                //AffineTransform.(Liniya);
+                theta += 0.08;
                 break;
             case "rot-":
                 theta -= 0.08;
